@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+import type { PageData } from './$types';
 
 	export let data: PageData;
 </script>
@@ -22,9 +22,15 @@
 				Requirements:
 				<ul class="requirements-list">
 					{#each version.requires as requirement}
-						<li>
+                        {#if requirement.is_in_api}
+                        <li>
 							<a href="/mods/{requirement.id}">{requirement.id}</a>@{requirement.version}
 						</li>
+                        {/if}
+                        {#if !requirement.is_in_api}
+                            <p>{requirement.id}@{requirement.version}</p>
+                        {/if}
+						
 					{/each}
 				</ul>
 			</div>
