@@ -28,7 +28,9 @@ import type { PageData } from './$types';
 						</li>
                         {/if}
                         {#if !requirement.is_in_api}
+                        <li>
                             <p>{requirement.id}@{requirement.version}</p>
+                        </li>
                         {/if}
 						
 					{/each}
