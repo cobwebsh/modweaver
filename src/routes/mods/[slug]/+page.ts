@@ -4,16 +4,11 @@ import { getProject } from '@/api/ApiClient';
 import type { AxiosError } from 'axios';
 
 export const load: Load = async ({ params }) => {
-	try {
-		if (params.slug) {
-			const project = await getProject(params.slug);
+	if (params.slug) {
+		const project = await getProject(params.slug).catch((err: AxiosError) => {
+			throw error(err.response?.status ?? 500, JSON.stringify(err.toJSON()));
+		});
 
-			return { project };
-		}
-
-		throw error(400);
-	} catch (e) {
-		const err = e as AxiosError;
-		throw error(err.response?.status ?? 500, err.toString());
+		return { project };
 	}
 };
