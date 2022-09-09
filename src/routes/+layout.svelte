@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { supabase } from '@/api/Supabase';
-	import { user } from '@/stores/session';
+	import { user, defaultUser } from '@/stores/session';
 
-	user.set(supabase.auth.user());
+	user.set(supabase.auth.user() ?? defaultUser);
 
 	supabase.auth.onAuthStateChange((_, session) => {
-		user.set(session?.user ?? null);
+		user.set(session?.user ?? defaultUser);
 	});
 </script>
 
