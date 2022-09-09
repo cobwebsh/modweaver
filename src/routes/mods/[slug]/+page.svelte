@@ -26,8 +26,8 @@ import type { PageData } from './$types';
                         <li>
 							<a href="/mods/{requirement.id}">{requirement.id}</a>@{requirement.version}
 						</li>
-                        {/if}
-                        {#if !requirement.is_in_api}
+                        
+                        {:else}
                         <li>
                             <p>{requirement.id}@{requirement.version}</p>
                         </li>

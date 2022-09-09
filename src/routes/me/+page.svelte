@@ -56,6 +56,18 @@
 
 		isLoading = false;
 	}
+    async function changeAvatar(file: File) {
+        const validExts = ["png", "jpg", "gif"];
+        const fileExt = file.name.split(".")[file.name.split(".").length];
+        if (validExts.includes(fileExt)) {
+            await supabase.from("avatars").remove([profile.id])
+        } else {
+            // TODO: replace with own error models
+            var error = "Invalid image extension: " + fileExt;
+            console.error(error);
+            alert(error);   
+        }
+    }
 </script>
 
 {#if isLoading}
