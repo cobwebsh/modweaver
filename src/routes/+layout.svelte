@@ -13,7 +13,7 @@
 	<h1 class="logo">ModWeaver</h1>
 	<a href="/">Home</a>
 	<a href="/mods">Mods</a>
-	{#if $user}
+	{#if $user !== defaultUser}
 		<a href="/me">Me</a>
 	{:else}
 		<a href="/login">Login</a>

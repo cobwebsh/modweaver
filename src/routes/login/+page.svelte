@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { supabase } from '@/api/Supabase';
-	import type { Profile } from '@/models/Profile';
 
 	let isLoading = false;
 	let status: string;
@@ -12,23 +11,13 @@
 	async function createAccount() {
 		isLoading = true;
 
+		console.log('Signing up');
 		let { user, error } = await supabase.auth.signUp({ email, password });
 		if (error) console.error(error);
 
 		if (user) {
-			// Create and insert a new profile for the user
-			// For now, set the username to the first part of the email (can be changed later)
-			const newProfile: Profile = {
-				id: user?.id,
-				username: email.split('@').at(0),
-			};
-			const { error } = await supabase.from('profiles').upsert(newProfile, { returning: 'minimal' });
-			if (error) {
-				status = error.message;
-			} else {
-				// If we successfully signed up, redirect to the user's page
-				await goto('/me');
-			}
+			// If we successfully signed up, let them know they need to accept through email
+			status = 'Please confirm your email by clicking the link we sent to you.';
 		}
 
 		isLoading = false;
@@ -37,6 +26,7 @@
 	async function login() {
 		isLoading = true;
 
+		console.log('Logging in');
 		let { error } = await supabase.auth.signIn({ email, password });
 		if (error) {
 			status = error.message;
@@ -58,8 +48,12 @@
 	<label for="email">Password:</label>
 	<input type="password" id="password" bind:value={password} required />
 
-	<button on:click={createAccount}>Create account</button>
 	<button type="submit">Log in</button>
-
-	<pre>{status}</pre>
+	<span>or</span>
+	<button on:click|preventDefault={createAccount}>Create account</button>
 </form>
+
+{#if status}
+	<div>Status:</div>
+	<pre>{status}</pre>
+{/if}
