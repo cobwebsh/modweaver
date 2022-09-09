@@ -7,5 +7,6 @@
 	"[svelte]": {
 		"editor.tabSize": 4,
 		"editor.defaultFormatter": "svelte.svelte-vscode"
-	}
+    },
+    "prettier.useTabs": true
 }
