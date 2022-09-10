@@ -20,3 +20,20 @@ export const toSlug = (input: string): string => {
 		.map((word) => word.toLocaleLowerCase().replace(/[^a-z0-9]/gi, ''))
 		.join('-');
 };
+
+export const isValidURL = (input: string): boolean => {
+	try {
+		new URL(input);
+	} catch {
+		return false;
+	}
+
+	return true;
+};
+
+/** BROWSER ONLY - Computes the SHA-256 checksum of the given ArrayBuffer  */
+export const calculateSHA256 = async (input: ArrayBufferLike): Promise<string> => {
+	return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', input)))
+		.map((b) => b.toString(16).padStart(2, '0'))
+		.join('');
+};

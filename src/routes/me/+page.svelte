@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { supabase } from '$lib/Supabase';
 	import { authGuard } from '@/guards';
+	import { calculateSHA256 as computeSHA256, isValidURL } from '@/lib/Helpers';
 	import type { Profile } from '@/models/Profile';
 	import { user } from '@/stores/session';
 	import { onMount } from 'svelte';
@@ -13,7 +14,7 @@
 
 	let profile: Profile;
 
-	let files: FileList | null | undefined;
+	let avatarFileList: FileList;
 
 	onMount(async () => {
 		// force cast to Profile because we can be certain that it will exist
@@ -44,43 +45,35 @@
 
 	async function saveProfileChanges() {
 		isLoading = true;
-		if (
-			profile?.avatar_url?.indexOf('http') != -1 &&
-			profile?.avatar_url?.indexOf(':') != -1 &&
-			profile?.avatar_url?.indexOf('//') != -1
-		) {
-		} else {
-			var err = 'Invalid avatar url!';
-			console.error(err);
+
+		// only check avatar url if we haven't attempted to upload one
+		if (!isValidURL(profile.avatar_url as string) && avatarFileList.length === 0) {
+			const err = new Error('Invalid avatar url!');
 			alert(err);
-			window.location.reload();
-			return;
+			throw err;
 		}
-		if (
-			profile?.website_url?.indexOf('http') != -1 &&
-			profile?.website_url?.indexOf(':') != -1 &&
-			profile?.website_url?.indexOf('//') != -1
-		) {
-		} else {
-			var err = 'Invalid website url!';
-			console.error(err);
+
+		if (!isValidURL(profile.website_url as string)) {
+			const err = new Error('Invalid website url!');
 			alert(err);
-			window.location.reload();
-			return;
+			throw err;
 		}
-		let url = await await supabase.storage.from('avatars').getPublicUrl(profile.id + '.' + (await changeAvatar(files)))
-			.publicURL;
-		if (url != null) {
-			profile.avatar_url = url;
+
+		const ext = await updateAvatar();
+		const publicUrlResponse = supabase.storage.from('avatars').getPublicUrl(`${profile.id}.${ext}`);
+		if (publicUrlResponse.data) {
+			profile.avatar_url = publicUrlResponse.data.publicURL;
 		} else {
-			console.error('URL was null! Please try again');
+			alert('Failed to upload avatar. Please try again later.');
+			throw publicUrlResponse.error?.message;
 		}
+
 		const { error } = await supabase
 			.from('profiles')
 			.update({
-				username: profile?.username,
-				website_url: profile?.website_url,
-				avatar_url: profile?.avatar_url,
+				username: profile.username,
+				website_url: profile.website_url,
+				avatar_url: profile.avatar_url,
 			})
 			.eq('id', profile?.id);
 
@@ -89,49 +82,28 @@
 
 		isLoading = false;
 	}
-	async function changeAvatar(file: FileList | null | undefined): Promise<string | undefined> {
-		const validExts = ['png', 'jpg', 'gif'];
-		if (file != null && file != undefined) {
-			for (var i = 0; file.length > i; i++) {
-				let f = file.item(i);
-				if (f != null) {
-					const fileExt = f.name.split('.')[f.name.split('.').length - 1];
-					console.log(f.name + ' : ' + f.name.split('.').length);
-					if (validExts.includes(fileExt)) {
-						let name = profile.id + '.' + fileExt;
-						console.log('hfgfdrh : ' + name);
-						/*let { error } = await supabase.storage.from('avatars').remove([name]);
-						let error_remove = error;
-						if (error_remove) {
-							console.error(error_remove)
-						}
-						({error} = (await supabase.storage.from('avatars').upload(name, f)));
-						let error_upload = error;
-						if (error   _upload) {
-							console.error(error_upload)
-						}*/
-						await supabase.storage.from('avatars').upload(name, f, {
-							upsert: true,
-						});
-						await supabase.storage.from('avatars').update(name, f, {
-							upsert: true,
-						});
-					} else {
-						// TODO: replace with own error models
-						var error = 'Invalid image extension: ' + fileExt;
-						console.error(error);
-						alert(error);
-					}
-					if (i == file.length) {
-						console.log(fileExt + ' : fileExt');
-						return fileExt;
-					} else {
-						console.log('Beep : ' + i + ' : ' + file.length);
-					}
-				}
-			}
-		}
-		return 'png';
+
+	async function updateAvatar(): Promise<string> {
+		const validExts = ['png', 'apng', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'heic'];
+
+		if (avatarFileList.length === 0) return Promise.reject(new Error('No file was selected'));
+
+		const file = avatarFileList.item(0);
+		if (!file) return Promise.reject(new Error('No file was selected'));
+
+		const fileExt = file.name.split('.').pop();
+		if (!fileExt) return Promise.reject(new Error('File does not have an extension'));
+
+		if (!validExts.includes(fileExt.toLocaleLowerCase()))
+			return Promise.reject(new Error('Invalid image extension: ' + fileExt));
+
+		//! crypto.subtle is only available on the browser. For Node, just import 'crypto'
+		const hash = await computeSHA256(await file.arrayBuffer());
+		await supabase.storage.from('avatars').upload(hash, file, {
+			upsert: true,
+		});
+
+		return fileExt;
 	}
 </script>
 
@@ -150,14 +122,13 @@
 		<label for="website">Website</label>
 		<input id="website" type="text" bind:value={profile.website_url} />
 
-		<!-- TODO: Add avatar uploading -->
-		{#if profile.avatar_url && profile.avatar_url?.indexOf('http') != -1}
+		{#if profile.avatar_url?.startsWith('http')}
 			<img class="avatar" alt="Your avatar" src={profile.avatar_url} />
 		{:else}
 			<div class="blank avatar">No avatar</div>
 		{/if}
 		<label for="avatar">Avatar</label>
-		<input type="file" id="avatar" bind:files />
+		<input type="file" id="avatar" bind:files={avatarFileList} />
 
 		<button type="submit">Save</button>
 	</form>
