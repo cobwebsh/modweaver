@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { supabase } from '@/api/Supabase';
+	import { supabase } from '$lib/Supabase';
 	import { authGuard } from '@/guards';
 	import type { Profile } from '@/models/Profile';
 	import { user } from '@/stores/session';

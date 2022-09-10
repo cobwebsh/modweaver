@@ -3,6 +3,7 @@ import type { ProjectVersion } from '@/models/ProjectVersion';
 
 /** A project hosted on ModWeaver */
 export interface Project {
+    id: string;
     /** The title of the project */
 	name: string;
     /** The user who created the project */

@@ -1,6 +1,6 @@
 import type { Load } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
-import { getProject } from '@/api/ApiClient';
+import { getProject } from '@/lib/ApiClient';
 import type { AxiosError } from 'axios';
 
 export const load: Load = async ({ params }) => {

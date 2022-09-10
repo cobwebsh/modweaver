@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { supabase } from '@/api/Supabase';
+	import { supabase } from '$lib/Supabase';
 	import { user, defaultUser } from '@/stores/session';
 
 	user.set(supabase.auth.user() ?? defaultUser);

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { supabase } from '@/api/Supabase';
+	import { supabase } from '$lib/Supabase';
 
 	let isLoading = false;
 	let status: string;
