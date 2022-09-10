@@ -1,47 +1,80 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import { getAuthorProfileByProjectSlug, getProject, getProjectVersions } from '@/lib/ApiClient';
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
+	import { defaultProject, type Project } from '@/models/Project';
+	import type { Profile } from '@/models/Profile';
+	import type { ProjectVersion } from '@/models/ProjectVersion';
+	import { goto } from '$app/navigation';
 
-	export let data: PageData;
+	let isLoading = true;
+	let project: Project;
+	let author: Profile;
+	let versions: ProjectVersion[];
+
+	onMount(async () => {
+		console.log('Loading project...');
+		project =
+			((await getProject($page.params.slug).catch(async (err) => {
+				console.error(err);
+				await goto('/');
+			})) as Project) ?? defaultProject;
+
+		console.log('Loading author...');
+		author = (await getAuthorProfileByProjectSlug($page.params.slug).catch((err) => {
+			console.error(err);
+		})) ?? { username: 'Unknown' };
+
+		console.log('Loading versions...');
+		versions =
+			(await getProjectVersions($page.params.slug).catch((err) => {
+				console.error(err);
+			})) ?? [];
+
+		isLoading = false;
+	});
 </script>
 
 <svelte:head>
-	<title>{data.project.name}</title>
+	<title>{project?.name ?? ''}</title>
 </svelte:head>
 
-<h2>{data.project.name}</h2>
-<h3>by {data.project.author}</h3>
+{#if isLoading}
+	<div>Loading...</div>
+{:else}
+	<h2>{project.name}</h2>
+	<h3>by <a href={author.website_url}>{author.username}</a></h3>
 
-<p>{data.project.description}</p>
+	<p>{project.description ?? 'No description given.'}</p>
 
-{data.project.versions.length} versions:
-<div class="version-list">
-	{#each data.project.versions.sort().reverse() as version}
-		<div class="version-card">
-			<div>Version {version.version}</div>
-			<div>
-				Requirements:
-				<ul class="requirements-list">
-					{#each version.requires as requirement}
-                        {#if requirement.is_in_api}
-                        <li>
-							<a href="/mods/{requirement.id}">{requirement.id}</a>@{requirement.version}
-						</li>
-                        
-                        {:else}
-                        <li>
-                            <p>{requirement.id}@{requirement.version}</p>
-                        </li>
-                        {/if}
-						
-					{/each}
-				</ul>
+	{versions.length} versions:
+	<div class="version-list">
+		{#each versions.sort().reverse() as version}
+			<div class="version-card">
+				<div>Version {version.version}</div>
+				<div>
+					Requirements:
+					<ul class="requirements-list">
+						{#each version.requires as requirement}
+							{#if requirement.is_in_api}
+								<li>
+									<a href="/mods/{requirement.id}">{requirement.id}</a>@{requirement.version}
+								</li>
+							{:else}
+								<li>
+									<p>{requirement.id}@{requirement.version}</p>
+								</li>
+							{/if}
+						{/each}
+					</ul>
+				</div>
+				<div class="toolbar">
+					<a href={version.url}>Download</a>
+				</div>
 			</div>
-			<div class="toolbar">
-				<a href={version.url}>Download</a>
-			</div>
-		</div>
-	{/each}
-</div>
+		{/each}
+	</div>
+{/if}
 
 <style>
 	.version-list {

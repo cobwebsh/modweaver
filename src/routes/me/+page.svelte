@@ -35,7 +35,7 @@
 
 		const { error } = await supabase.auth.signOut();
 
-		if (error) console.error(error);
+		if (error) throw error;
 
 		await goto('/');
 
@@ -85,7 +85,7 @@
 			})
 			.eq('id', profile?.id);
 
-		if (error) console.error(error);
+		if (error) throw error;
 		else alert('Successfully updated profile!');
 
 		isLoading = false;

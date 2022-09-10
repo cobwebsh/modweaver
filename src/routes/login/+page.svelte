@@ -13,7 +13,7 @@
 
 		console.log('Signing up');
 		let { user, error } = await supabase.auth.signUp({ email, password });
-		if (error) console.error(error);
+		if (error) throw error;
 
 		if (user) {
 			// If we successfully signed up, let them know they need to accept through email

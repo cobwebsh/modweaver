@@ -12,3 +12,11 @@ export const convertPGRSTErrorCodeToHttpStatusCode = (pgrstErrorCode: string): n
 			return 500;
 	}
 };
+
+/** Removes non-alphanumeric characters, converts to lower case, and converts spaces to dashes */
+export const toSlug = (input: string): string => {
+	return input
+		.split(' ')
+		.map((word) => word.toLocaleLowerCase().replace(/[^a-z0-9]/gi, ''))
+		.join('-');
+};

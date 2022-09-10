@@ -1,7 +1,17 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import { goto } from '$app/navigation';
+	import { getProjectSlugs } from '@/lib/ApiClient';
+	import { user, defaultUser } from '@/stores/session';
+	import { onMount } from 'svelte';
 
-	export let data: PageData;
+	let isLoading = true;
+	let project_slugs: string[];
+
+	onMount(async () => {
+		project_slugs = await getProjectSlugs();
+
+		isLoading = false;
+	});
 </script>
 
 <svelte:head>
@@ -10,9 +20,18 @@
 
 <h2>Mods</h2>
 
-{data.project_ids.length} mods:
-<ul>
-	{#each data.project_ids as id}
-		<li><a href="/mods/{id}">{id}</a></li>
-	{/each}
-</ul>
+{#if isLoading}
+	<div>Loading...</div>
+{:else}
+	{#if $user !== defaultUser}
+		<button on:click={async () => await goto('/mods/create')}>+ Create Project</button>
+	{/if}
+	<div>
+		{project_slugs.length} mods:
+		<ul>
+			{#each project_slugs as slug}
+				<li><a href="/mods/{slug}">{slug}</a></li>
+			{/each}
+		</ul>
+	</div>
+{/if}
