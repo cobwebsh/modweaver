@@ -14,10 +14,12 @@
 
 	onMount(async () => {
 		await Promise.all([
-			getProject($page.params.slug).catch(async (err) => {
-				console.error(err);
-				await goto('/');
-			}),
+			getProject($page.params.slug)
+				.then((proj) => (project = proj))
+				.catch(async (err) => {
+					console.error(err);
+					await goto('/');
+				}),
 			getAuthorProfileByProjectSlug($page.params.slug)
 				.then((profile) => (author = profile))
 				.catch((err) => console.error(err)),
