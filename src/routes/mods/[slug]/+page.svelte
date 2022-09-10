@@ -8,28 +8,23 @@
 	import { goto } from '$app/navigation';
 
 	let isLoading = true;
-	let project: Project;
-	let author: Profile;
-	let versions: ProjectVersion[];
+	let project: Project = defaultProject;
+	let author: Profile = { username: 'Unknown' };
+	let versions: ProjectVersion[] = [];
 
 	onMount(async () => {
 		await Promise.all([
-		project =
-			((await getProject($page.params.slug).catch(async (err) => {
+			getProject($page.params.slug).catch(async (err) => {
 				console.error(err);
 				await goto('/');
-			})) as Project) ?? defaultProject;
-
+			}),
+			getAuthorProfileByProjectSlug($page.params.slug)
 				.then((profile) => (author = profile))
-		author = (await getAuthorProfileByProjectSlug($page.params.slug).catch((err) => {
-			console.error(err);
-		})) ?? { username: 'Unknown' };
-
+				.catch((err) => console.error(err)),
+			getProjectVersions($page.params.slug)
+				.then((vers) => (versions = vers))
+				.catch((err) => console.error(err)),
 		]);
-		versions =
-			(await getProjectVersions($page.params.slug).catch((err) => {
-				console.error(err);
-			})) ?? [];
 
 		isLoading = false;
 	});
