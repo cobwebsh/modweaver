@@ -108,9 +108,12 @@
                         }
 						({error} = (await supabase.storage.from('avatars').upload(name, f)));
                         let error_upload = error;
-                        if (error_upload) {
+                        if (error   _upload) {
                             console.error(error_upload)
                         }*/
+                        await supabase.storage.from('avatars').upload(name, f, {
+                            upsert: true
+                        }) 
                         await supabase.storage.from('avatars').update(name, f, {
                             upsert: true
                         })
