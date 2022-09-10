@@ -1,12 +1,15 @@
 {
 	"editor.detectIndentation": false,
-	"[typescript]": {
-		"editor.tabSize": 4,
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
+	"editor.tabSize": 4,
+	"editor.insertSpaces": false,
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+
+	"files.insertFinalNewline": true,
+
 	"[svelte]": {
-		"editor.tabSize": 4,
 		"editor.defaultFormatter": "svelte.svelte-vscode"
 	},
-	"prettier.useTabs": true
+
+	"svelte.enable-ts-plugin": true
 }

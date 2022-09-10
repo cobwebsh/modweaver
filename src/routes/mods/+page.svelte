@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { getProjectSlugs } from '@/lib/ApiClient';
-	import { user, defaultUser } from '@/stores/session';
+	import { defaultUser, user } from '@/stores/session';
 	import { onMount } from 'svelte';
 
 	let isLoading = true;

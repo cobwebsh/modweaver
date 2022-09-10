@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { getAuthorProfileByProjectSlug, getProject, getProjectVersions } from '@/lib/ApiClient';
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
-	import { defaultProject, type Project } from '@/models/Project';
-	import type { Profile } from '@/models/Profile';
-	import type { ProjectVersion } from '@/models/ProjectVersion';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { getAuthorProfileByProjectSlug, getProject, getProjectVersions } from '@/lib/ApiClient';
+	import type { Profile } from '@/models/Profile';
+	import { defaultProject, type Project } from '@/models/Project';
+	import type { ProjectVersion } from '@/models/ProjectVersion';
+	import { onMount } from 'svelte';
 
 	let isLoading = true;
 	let project: Project = defaultProject;

@@ -68,9 +68,8 @@
 			window.location.reload();
 			return;
 		}
-		let url = await await supabase.storage
-			.from('avatars')
-			.getPublicUrl(profile.id + '.' + (await changeAvatar(files))).publicURL;
+		let url = await await supabase.storage.from('avatars').getPublicUrl(profile.id + '.' + (await changeAvatar(files)))
+			.publicURL;
 		if (url != null) {
 			profile.avatar_url = url;
 		} else {
@@ -99,24 +98,24 @@
 					const fileExt = f.name.split('.')[f.name.split('.').length - 1];
 					console.log(f.name + ' : ' + f.name.split('.').length);
 					if (validExts.includes(fileExt)) {
-                        let name = profile.id + "." + fileExt;
-                        console.log("hfgfdrh : " + name)
+						let name = profile.id + '.' + fileExt;
+						console.log('hfgfdrh : ' + name);
 						/*let { error } = await supabase.storage.from('avatars').remove([name]);
-                        let error_remove = error;
-                        if (error_remove) {
-                            console.error(error_remove)
-                        }
+						let error_remove = error;
+						if (error_remove) {
+							console.error(error_remove)
+						}
 						({error} = (await supabase.storage.from('avatars').upload(name, f)));
-                        let error_upload = error;
-                        if (error   _upload) {
-                            console.error(error_upload)
-                        }*/
-                        await supabase.storage.from('avatars').upload(name, f, {
-                            upsert: true
-                        }) 
-                        await supabase.storage.from('avatars').update(name, f, {
-                            upsert: true
-                        })
+						let error_upload = error;
+						if (error   _upload) {
+							console.error(error_upload)
+						}*/
+						await supabase.storage.from('avatars').upload(name, f, {
+							upsert: true,
+						});
+						await supabase.storage.from('avatars').update(name, f, {
+							upsert: true,
+						});
 					} else {
 						// TODO: replace with own error models
 						var error = 'Invalid image extension: ' + fileExt;
@@ -127,12 +126,12 @@
 						console.log(fileExt + ' : fileExt');
 						return fileExt;
 					} else {
-                        console.log("Beep : " + i + " : " + file.length)
-                    }
+						console.log('Beep : ' + i + ' : ' + file.length);
+					}
 				}
 			}
 		}
-        return "png";
+		return 'png';
 	}
 </script>
 
@@ -159,7 +158,6 @@
 		{/if}
 		<label for="avatar">Avatar</label>
 		<input type="file" id="avatar" bind:files />
-		
 
 		<button type="submit">Save</button>
 	</form>
