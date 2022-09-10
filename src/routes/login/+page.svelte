@@ -11,7 +11,6 @@
 	async function createAccount() {
 		isLoading = true;
 
-		console.log('Signing up');
 		let { user, error } = await supabase.auth.signUp({ email, password });
 		if (error) throw error;
 
@@ -26,7 +25,6 @@
 	async function login() {
 		isLoading = true;
 
-		console.log('Logging in');
 		let { error } = await supabase.auth.signIn({ email, password });
 		if (error) {
 			status = error.message;

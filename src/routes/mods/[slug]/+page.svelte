@@ -13,19 +13,19 @@
 	let versions: ProjectVersion[];
 
 	onMount(async () => {
-		console.log('Loading project...');
+		await Promise.all([
 		project =
 			((await getProject($page.params.slug).catch(async (err) => {
 				console.error(err);
 				await goto('/');
 			})) as Project) ?? defaultProject;
 
-		console.log('Loading author...');
+				.then((profile) => (author = profile))
 		author = (await getAuthorProfileByProjectSlug($page.params.slug).catch((err) => {
 			console.error(err);
 		})) ?? { username: 'Unknown' };
 
-		console.log('Loading versions...');
+		]);
 		versions =
 			(await getProjectVersions($page.params.slug).catch((err) => {
 				console.error(err);
