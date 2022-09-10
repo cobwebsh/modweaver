@@ -59,8 +59,12 @@
 			throw err;
 		}
 
-		const ext = await updateAvatar();
-		const publicUrlResponse = supabase.storage.from('avatars').getPublicUrl(`${profile.id}.${ext}`);
+		const avatarFile = avatarFileList.item(0);
+		if (!avatarFile) throw new Error('No avatar file selected.');
+
+		const hash = await updateAvatar(avatarFile);
+
+		const publicUrlResponse = supabase.storage.from('avatars').getPublicUrl(hash);
 		if (publicUrlResponse.data) {
 			profile.avatar_url = publicUrlResponse.data.publicURL;
 		} else {
@@ -78,18 +82,12 @@
 			.eq('id', profile?.id);
 
 		if (error) throw error;
-		else alert('Successfully updated profile!');
 
 		isLoading = false;
 	}
 
-	async function updateAvatar(): Promise<string> {
+	async function updateAvatar(file: File): Promise<string> {
 		const validExts = ['png', 'apng', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'heic'];
-
-		if (avatarFileList.length === 0) return Promise.reject(new Error('No file was selected'));
-
-		const file = avatarFileList.item(0);
-		if (!file) return Promise.reject(new Error('No file was selected'));
 
 		const fileExt = file.name.split('.').pop();
 		if (!fileExt) return Promise.reject(new Error('File does not have an extension'));
@@ -103,7 +101,7 @@
 			upsert: true,
 		});
 
-		return fileExt;
+		return hash;
 	}
 </script>
 
@@ -147,6 +145,7 @@
 		aspect-ratio: 1;
 		border-radius: 999rem;
 		margin: 1rem;
+		object-fit: cover;
 	}
 
 	.blank.avatar {
