@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { supabase } from '$lib/Supabase';
-	import { defaultUser, user } from '@/stores/session';
+	import "../app.postcss";
+    import { supabase } from '$lib/Supabase';
+    import { defaultUser, user } from '@/stores/session';
 
-	user.set(supabase.auth.user() ?? defaultUser);
+    user.set(supabase.auth.user() ?? defaultUser);
 
-	supabase.auth.onAuthStateChange((_, session) => {
+    supabase.auth.onAuthStateChange((_, session) => {
 		user.set(session?.user ?? defaultUser);
 	});
 </script>
