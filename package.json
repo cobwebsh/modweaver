@@ -15,6 +15,7 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-cloudflare": "1.0.0-next.32",
 		"@sveltejs/kit": "next",
+		"@types/semver": "^7.3.12",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
 		"eslint": "^8.16.0",
@@ -32,6 +33,7 @@
 	"type": "module",
 	"dependencies": {
 		"@supabase/supabase-js": "^1.35.6",
-		"axios": "^0.27.2"
+		"axios": "^0.27.2",
+		"semver": "^7.3.7"
 	}
 }
