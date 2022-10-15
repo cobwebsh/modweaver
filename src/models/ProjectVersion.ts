@@ -1,14 +1,14 @@
-import type { VersionRequirement } from '@/models/VersionRequirement';
-
 /** A single version or revision of a project */
 export interface ProjectVersion {
-	id: string;
-	/** The slug of the project this version belongs to */
-	project_slug: string;
+	id?: string;
+	/** The date this version was uploaded */
+	created_at?: Date;
 	/** The version number */
 	version: string;
+	/** The slug of the project this version belongs to */
+	project_slug: string;
 	/** The main download link */
-	url: string;
-	/** A list of other mods that this version requires in order to work */
-	requires: VersionRequirement[];
+	download_url: string;
+	/** Has this version been approved by a moderator? */
+	is_approved?: boolean;
 }

@@ -37,3 +37,21 @@ export const calculateSHA256 = async (input: ArrayBufferLike): Promise<string> =
 		.map((b) => b.toString(16).padStart(2, '0'))
 		.join('');
 };
+
+// /** The regex used to validate single semantic version numbers. https://semver.org/ */
+// export const semverRegex =
+// 	/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
+// /** The regex used to validate single semantic version numbers (as a string, not including leading and trailing slashes). https://semver.org/ */
+// export const semverRegexPattern = semverRegex.toString().slice(1, -1);
+
+// /** The regex used to validate NPM-style semantic version numbers. https://docs.npmjs.com/about-semantic-versioning */
+// export const semverDependencyRegex =
+// 	/^[*x]|(?:[~^]?(0|[1-9]\d*)(?:\.(?:[x*]|(0|[1-9]\d*))(?:\.(?:[x*]|(0|[1-9]\d*))(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)?)?)$/;
+
+// /** The regex used to validate NPM-style semantic version numbers (as a string, not including leading and trailing slashes). https://docs.npmjs.com/about-semantic-versioning */
+// export const semverDependencyRegexPattern = semverDependencyRegex.toString().slice(1, -1);
+
+// /** Returns true if the input is a valid semantic version number. */
+// export const isValidSemVer = (input: string): boolean => {
+// 	return semverRegex.test(input);
+// };

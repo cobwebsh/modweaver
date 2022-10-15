@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-
 	import { authGuard } from '@/guards';
 	import { toSlug } from '@/lib/Helpers';
 	import { supabase } from '@/lib/Supabase';
-
 	import type { Project } from '@/models/Project';
 	import { user } from '@/stores/session';
 	import { get } from 'svelte/store';
