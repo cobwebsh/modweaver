@@ -11,15 +11,16 @@
 	import { defaultProject, type Project } from '@/models/Project';
 	import type { ProjectDependency } from '@/models/ProjectDependency';
 	import type { ProjectVersion } from '@/models/ProjectVersion';
+	import SvelteMarkdown from 'svelte-markdown';
 	import { user } from '@/stores/session';
 	import { onMount } from 'svelte';
-
 	let isLoading = true;
 	let project: Project = defaultProject;
+	let compiledDesc: { code: string; data?: Record<string, unknown> | undefined; map?: string | undefined } | undefined;
 	let author: Profile = { username: 'Unknown' };
 	let versions: ProjectVersion[] = [];
+	let description = `No description.`;
 	let dependencies: { [version_id: string]: ProjectDependency[] } = {};
-
 	onMount(async () => {
 		await Promise.all([
 			getProject($page.params.slug)
@@ -41,9 +42,10 @@
 				})
 				.catch((err) => console.error(err)),
 		]);
-
 		isLoading = false;
 	});
+	import { marked } from 'marked';
+	const source = '# This is a header';
 </script>
 
 <svelte:head>
@@ -55,8 +57,10 @@
 {:else}
 	<h2>{project.name}</h2>
 	<h3>by <a href={author.website_url}>{author.username}</a></h3>
+	<script>
+	</script>
 
-	<p>{project.description ?? 'No description given.'}</p>
+	<p>{@html marked.parse(project?.description)}</p>
 
 	{#if $user.id === author.id}
 		<a href={`/mods/${project.slug}/upload`}><button>+ Create Version</button></a>

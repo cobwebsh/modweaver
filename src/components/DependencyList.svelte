@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getProjectSlugsAndNames } from '@/lib/ApiClient';
 	import { defaultProjectDependency, type ProjectDependency } from '@/models/ProjectDependency';
-	import semver from 'semver/index';
+	//import semver from 'semver/index';
 	import { onMount } from 'svelte';
 
 	export let id: string;
