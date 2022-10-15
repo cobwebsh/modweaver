@@ -60,7 +60,7 @@
 	<script>
 	</script>
 
-	<p>{@html marked.parse(project?.description)}</p>
+	<p>{@html marked.parse(project?.description ?? '## *No description was provided*')}</p>
 
 	{#if $user.id === author.id}
 		<a href={`/mods/${project.slug}/upload`}><button>+ Create Version</button></a>
