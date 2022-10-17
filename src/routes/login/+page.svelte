@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { supabase } from '$lib/Supabase';
+	import { Heading, Label, Input, Button } from 'flowbite-svelte';
 
 	let isLoading = false;
 	let status: string;
@@ -37,18 +38,18 @@
 	}
 </script>
 
-<h2>Login</h2>
+<Heading>Login</Heading>
 
 <form on:submit|preventDefault={login}>
-	<label for="email">Email address:</label>
-	<input type="email" id="email" bind:value={email} required />
+	<Label for="email">Email address:</Label>
+	<Input type="email" id="email" bind:value={email} required />
 
-	<label for="email">Password:</label>
-	<input type="password" id="password" bind:value={password} required />
+	<Label for="email">Password:</Label>
+	<Input type="password" id="password" bind:value={password} required />
 
-	<button type="submit">Log in</button>
+	<Button type="submit">Log in</Button>
 	<span>or</span>
-	<button on:click|preventDefault={createAccount}>Create account</button>
+	<Button color="alternative" on:click={createAccount}>Create account</Button>
 </form>
 
 {#if status}

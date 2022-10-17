@@ -7,6 +7,7 @@
 
 	import type { Project } from '@/models/Project';
 	import { user } from '@/stores/session';
+	import { Button, Heading, Input, Label, Textarea } from 'flowbite-svelte';
 	import { get } from 'svelte/store';
 
 	authGuard();
@@ -39,20 +40,21 @@
 	<title>Create Project</title>
 </svelte:head>
 
-<h2>Create a Project</h2>
+<Heading>Create a Project</Heading>
 
 <form on:submit|preventDefault={createProject}>
-	<label for="name">Project Name:</label>
-	<input
+	<Label for="name" class="mt-2 mb-1">Project Name:</Label>
+	<Input
 		id="name"
 		type="text"
 		bind:value={newProject.name}
 		placeholder="e.g. My Amazing Project"
 		disabled={isLoading}
+		required
 	/>
 
-	<label for="iconUrl">Icon URL:</label>
-	<input
+	<Label for="iconUrl" class="mt-2 mb-1">Icon URL:</Label>
+	<Input
 		id="iconUrl"
 		type="text"
 		bind:value={newProject.icon_url}
@@ -63,8 +65,8 @@
 		<img alt="Project icon" src={newProject.icon_url} />
 	{/if}
 
-	<label for="repoUrl">Repository:</label>
-	<input
+	<Label for="repoUrl" class="mt-2 mb-1">Repository:</Label>
+	<Input
 		id="repoUrl"
 		type="text"
 		bind:value={newProject.repo_url}
@@ -72,8 +74,8 @@
 		disabled={isLoading}
 	/>
 
-	<label for="summary">Summary:</label>
-	<input
+	<Label for="summary" class="mt-2 mb-1">Summary:</Label>
+	<Input
 		id="summary"
 		type="text"
 		bind:value={newProject.summary}
@@ -81,27 +83,13 @@
 		disabled={isLoading}
 	/>
 
-	<label for="description">Description:</label>
-	<textarea
+	<Label for="description" class="mt-2 mb-1">Description:</Label>
+	<Textarea
 		id="description"
 		bind:value={newProject.description}
 		placeholder="The full description of your project. Be as detailed as you want!"
 		disabled={isLoading}
 	/>
 
-	<button type="submit" disabled={isLoading}>Create</button>
+	<Button type="submit" disabled={isLoading}>Create</Button>
 </form>
-
-<style>
-	form {
-		display: flex;
-		flex-direction: column;
-
-		width: 24rem;
-	}
-
-	form > label {
-		margin-top: 0.5rem;
-		margin-bottom: 0.25rem;
-	}
-</style>

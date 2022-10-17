@@ -5,6 +5,7 @@
 	import { calculateSHA256 as computeSHA256, isValidURL } from '@/lib/Helpers';
 	import type { Profile } from '@/models/Profile';
 	import { user } from '@/stores/session';
+	import { Button, Fileupload, Heading, Input, Label } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -96,37 +97,35 @@
 {#if isLoading}
 	<div>Loading...</div>
 {:else if $user}
-	<h2>Me</h2>
+	<Heading>Me</Heading>
 
 	<form class="profile-edit" on:submit|preventDefault={saveProfileChanges}>
-		<label for="username">Username</label>
-		<input id="username" type="text" bind:value={profile.username} />
+		<Label for="username" class="mt-2 mb-1">Username</Label>
+		<Input id="username" type="text" bind:value={profile.username} />
 
-		<label for="email">Email address</label>
-		<input id="email" type="email" bind:value={$user.email} disabled />
+		<Label for="email" class="mt-2 mb-1">Email address</Label>
+		<Input id="email" type="email" bind:value={$user.email} disabled />
 
-		<label for="website">Website</label>
-		<input id="website" type="text" bind:value={profile.website_url} />
+		<Label for="website" class="mt-2 mb-1">Website</Label>
+		<Input id="website" type="text" bind:value={profile.website_url} />
 
+		<Label for="avatar" class="mt-2 mb-1">Avatar</Label>
 		{#if profile.avatar_url?.startsWith('http')}
 			<img class="avatar" alt="Your avatar" src={profile.avatar_url} />
 		{:else}
 			<div class="blank avatar">No avatar</div>
 		{/if}
-		<label for="avatar">Avatar</label>
-		<input type="file" id="avatar" bind:files={avatarFileList} />
+		<Fileupload id="avatar" bind:files={avatarFileList} />
 
-		<button type="submit">Save</button>
+		<Button type="submit">Save</Button>
 	</form>
-
-	<button on:click={logout}>Log out</button>
 {/if}
 
 <style>
 	.profile-edit {
 		display: flex;
 		flex-direction: column;
-		width: 12rem;
+		width: 24rem;
 	}
 
 	.avatar {
