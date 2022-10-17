@@ -31,18 +31,6 @@
 		isLoading = false;
 	});
 
-	async function logout() {
-		isLoading = true;
-
-		const { error } = await supabase.auth.signOut();
-
-		if (error) throw error;
-
-		await goto('/');
-
-		isLoading = false;
-	}
-
 	async function saveProfileChanges() {
 		isLoading = true;
 
